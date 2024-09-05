@@ -9,7 +9,60 @@ using System.Xml.Linq;
 
 namespace Eshop.Services
 {
-    public class PaymentService : IHostedService
+    public class PaymentService : BackgroundService
+    {
+        private readonly IPaymentQueue _paymentQueue;
+        private readonly EshopContext _dbContext;
+
+        public PaymentService(IPaymentQueue paymentQueue, EshopContext dbContext)
+        {
+            _paymentQueue = paymentQueue ?? throw new ArgumentNullException(nameof(paymentQueue));
+            _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
+        }
+        protected override async Task ExecuteAsync(CancellationToken stoppingToken)
+        {
+            while (!stoppingToken.IsCancellationRequested)
+            {
+                try
+                {
+                    PaymentInfo paymentInfo = await _paymentQueue.DequeueAsync(stoppingToken).ConfigureAwait(false);
+                    if (paymentInfo != null)
+                    {
+                        await UpdateOrderStateAsync(paymentInfo).ConfigureAwait(false);
+                    }
+                }
+                catch (OperationCanceledException ex)
+                {
+                    Console.WriteLine($"Operation of payment queue element processing was canceled, message:{ex.Message}");
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Attempt to process payment queue element was unsuccessful, message:{ex.Message}");
+                }
+            }
+        }
+        private async Task UpdateOrderStateAsync(PaymentInfo paymentInfo)
+        {
+            var order = _dbContext.Order.FirstOrDefault(order => order.Id == paymentInfo.OrderId);
+            if (order == null)
+            {
+                throw new OrderNotFoundException(paymentInfo.OrderId);
+            }
+
+            order.State = paymentInfo.Payed ? OrderState.Payd : OrderState.Rejected;
+
+            await _dbContext.SaveChangesAsync().ConfigureAwait(false);
+
+            Console.WriteLine($"[{order.Id}] Successful payment update to {order.State}");
+        }
+        public override void Dispose()
+        {
+            base.Dispose();
+            _dbContext.Dispose();
+        }
+
+    }
+   /* public class PaymentService : IHostedService
     {
         private readonly IPaymentQueue _paymentQueue;
         private readonly EshopContext _dbContext;
@@ -80,5 +133,5 @@ namespace Eshop.Services
             }
         }
 
-    }
+    }*/
 }
