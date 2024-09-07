@@ -55,11 +55,6 @@ namespace Eshop.Services
 
             Console.WriteLine($"[{order.Id}] Successful payment update to {order.State}");
         }
-        public override void Dispose()
-        {
-            base.Dispose();
-            _dbContext.Dispose();
-        }
 
     }
    /* public class PaymentService : IHostedService
