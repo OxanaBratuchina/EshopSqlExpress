@@ -41,11 +41,11 @@ namespace Eshop.DataBase
                 .HasMany(o => o.Products)
                 .WithMany(p => p.Orders)
                 .UsingEntity<OrderProduct>(
-                    j => j
+                    right => right
                         .HasOne(ao => ao.Product)
                         .WithMany(a => a.OrderProducts)
                         .HasForeignKey(ao => ao.ProductId),
-                    j => j
+                    left => left
                     .HasOne(ao => ao.Order)
                     .WithMany(a => a.OrderProducts)
                     .HasForeignKey(ao => ao.OrderId),
