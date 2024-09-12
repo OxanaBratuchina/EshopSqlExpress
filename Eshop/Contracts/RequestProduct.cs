@@ -14,6 +14,13 @@ namespace Eshop.Contracts
             Price = price;
         }
 
+        public RequestProduct(OrderProduct orderProduct)
+        {
+            Name = orderProduct.Product?.Name;
+            Count = orderProduct.Count;
+            Price = orderProduct.Price;
+        }
+
         public string? Name { get; set; }
         public double Price { get; set; }
 

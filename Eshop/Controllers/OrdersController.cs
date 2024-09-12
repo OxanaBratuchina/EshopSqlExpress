@@ -25,8 +25,24 @@ namespace Eshop.Controllers
         [ProducesResponseType(200, Type = typeof(IEnumerable<ResponseOrder>))]
         public async Task<ActionResult<IEnumerable<ResponseOrder>>> GetOrderAsync()
         {
+            //return await _context.Order
+            //    .AsNoTracking()
+            //    .Select(
+            //    dbo => new ResponseOrder()
+            //    {
+            //        ClientName = dbo.ClientName,
+            //        DateOfCreation = dbo.DateOfCreation,
+            //        State = dbo.State,
+            //        Id = dbo.Id,
+            //        Products = dbo.OrderProducts.Select(op => new RequestProduct(op.Product, op.Count, op.Price)).ToList()
+            //    }
+
+            //    ).ToListAsync().ConfigureAwait(false);
+
             return await _context.Order
                 .AsNoTracking()
+                .Include(o=>o.OrderProducts)
+                .ThenInclude(op=> op.Product)
                 .Select(
                 dbo => new ResponseOrder()
                 {
@@ -34,7 +50,7 @@ namespace Eshop.Controllers
                     DateOfCreation = dbo.DateOfCreation,
                     State = dbo.State,
                     Id = dbo.Id,
-                    Products = dbo.OrderProducts.Select(op => new RequestProduct(op.Product, op.Count, op.Price)).ToList()
+                    Products = dbo.OrderProducts.Select(op => new RequestProduct(op)).ToList()
                 }
 
                 ).ToListAsync().ConfigureAwait(false);
