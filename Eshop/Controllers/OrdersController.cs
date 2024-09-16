@@ -23,7 +23,7 @@ namespace Eshop.Controllers
         // GET: api/Orders
         [HttpGet]
         [ProducesResponseType(200, Type = typeof(IEnumerable<ResponseOrder>))]
-        public async Task<ActionResult<IEnumerable<ResponseOrder>>> GetOrderAsync()
+        public async Task<ActionResult<IEnumerable<ResponseOrder>>> GetOrderAsync([FromQuery] QueryObject queryObject)
         {
             //return await _context.Order
             //    .AsNoTracking()
@@ -38,11 +38,10 @@ namespace Eshop.Controllers
             //    }
 
             //    ).ToListAsync().ConfigureAwait(false);
-
-            return await _context.Order
+            var respOrders = _context.Order
                 .AsNoTracking()
-                .Include(o=>o.OrderProducts)
-                .ThenInclude(op=> op.Product)
+                .Include(o => o.OrderProducts)
+                .ThenInclude(op => op.Product)
                 .Select(
                 dbo => new ResponseOrder()
                 {
@@ -53,7 +52,18 @@ namespace Eshop.Controllers
                     Products = dbo.OrderProducts.Select(op => new RequestProduct(op)).ToList()
                 }
 
-                ).ToListAsync().ConfigureAwait(false);
+                ).AsQueryable();
+            //filtering 
+            if (queryObject != null)
+            {
+                if (queryObject.OrderState.HasValue)
+                {
+                    respOrders = respOrders.Where(o => o.State == queryObject.OrderState);
+                }
+                if (!string.IsNullOrWhiteSpace(queryObject.Client))
+                    respOrders = respOrders.Where(o => !string.IsNullOrEmpty(o.ClientName) && o.ClientName.Contains(queryObject.Client));
+            }
+            return await respOrders.ToListAsync().ConfigureAwait(false);
         }
 
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
@@ -74,6 +84,8 @@ namespace Eshop.Controllers
         [ProducesResponseType(400)]
         public async Task<ActionResult<Order>> PostOrderAsync(RequestOrder order)
         {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
             var dbOrder = new Order() { ClientName = order.ClientName, DateOfCreation = DateTime.Now, State = OrderState.New };
             _context.Order.Add(dbOrder);
 
