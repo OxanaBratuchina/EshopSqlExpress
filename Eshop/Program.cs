@@ -16,7 +16,7 @@ namespace Eshop
 
 
             builder.Services.AddDbContext<EshopContext>(options =>
-            options.UseSqlServer(builder.Configuration.GetConnectionString("EshopContext") ?? throw new InvalidOperationException("Connection string 'EshopContext' not found.")),ServiceLifetime.Singleton);
+            options.UseSqlServer(builder.Configuration.GetConnectionString("EshopContext") ?? throw new InvalidOperationException("Connection string 'EshopContext' not found.")));
             // Add services to the container.
 
             builder.Services.AddControllers();

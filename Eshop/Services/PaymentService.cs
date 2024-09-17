@@ -4,6 +4,7 @@ using Eshop.DataBase;
 using Eshop.Models;
 using Microsoft.Build.Experimental.FileAccess;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.VisualStudio.Threading;
 using System.Xml.Linq;
 
@@ -12,12 +13,12 @@ namespace Eshop.Services
     public class PaymentService : BackgroundService
     {
         private readonly IPaymentQueue _paymentQueue;
-        private readonly EshopContext _dbContext;
+        private readonly IServiceProvider _serviceProvider;
 
-        public PaymentService(IPaymentQueue paymentQueue, EshopContext dbContext)
+        public PaymentService(IPaymentQueue paymentQueue, IServiceProvider serviceProvider)
         {
             _paymentQueue = paymentQueue ?? throw new ArgumentNullException(nameof(paymentQueue));
-            _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
+            _serviceProvider = serviceProvider;
         }
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
@@ -43,17 +44,21 @@ namespace Eshop.Services
         }
         private async Task UpdateOrderStateAsync(PaymentInfo paymentInfo)
         {
-            var order = _dbContext.Order.FirstOrDefault(order => order.Id == paymentInfo.OrderId);
-            if (order == null)
+            using (var scope = _serviceProvider.CreateScope())
             {
-                throw new OrderNotFoundException(paymentInfo.OrderId);
+                var dbContext = scope.ServiceProvider.GetRequiredService<EshopContext>();
+                var order = dbContext.Order.FirstOrDefault(order => order.Id == paymentInfo.OrderId);
+                if (order == null)
+                {
+                    throw new OrderNotFoundException(paymentInfo.OrderId);
+                }
+
+                order.State = paymentInfo.Payed ? OrderState.Payd : OrderState.Rejected;
+
+                await dbContext.SaveChangesAsync().ConfigureAwait(false);
+
+                Console.WriteLine($"[{order.Id}] Successful payment update to {order.State}");
             }
-
-            order.State = paymentInfo.Payed ? OrderState.Payd : OrderState.Rejected;
-
-            await _dbContext.SaveChangesAsync().ConfigureAwait(false);
-
-            Console.WriteLine($"[{order.Id}] Successful payment update to {order.State}");
         }
 
     }

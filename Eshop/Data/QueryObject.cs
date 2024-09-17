@@ -7,5 +7,9 @@ namespace Eshop.Data
         public OrderState? OrderState { get; set; } = null;
 
         public string? Client { get; set; } = null;
+
+        public string? SortBy { get; set; }
+
+        public bool IsDescending { get; set; } = false;
     }
 }
