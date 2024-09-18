@@ -1,8 +1,13 @@
 using Eshop.Data;
+using Eshop.DataBase;
 using Eshop.Models;
 using Eshop.Services;
 using Eshop.Tests.Infrastructure.Helpers;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
+using Moq;
 
 
 namespace Eshop.Tests
@@ -10,8 +15,22 @@ namespace Eshop.Tests
     public class PaymentServiceTests
     {
         private const int WaitTimeOut = 5000;
+        Mock<IServiceProvider> _serviceProvider = new Mock<IServiceProvider>();
         public PaymentServiceTests() 
         {
+
+
+            var serviceScope = new Mock<IServiceScope>();
+            serviceScope.Setup(x => x.ServiceProvider).Returns(_serviceProvider.Object);
+
+            var serviceScopeFactory = new Mock<IServiceScopeFactory>();
+            serviceScopeFactory
+                .Setup(x => x.CreateScope())
+                .Returns(serviceScope.Object);
+
+            _serviceProvider
+                .Setup(x => x.GetService(typeof(IServiceScopeFactory)))
+                .Returns(serviceScopeFactory.Object);
 
         }
 
@@ -25,6 +44,11 @@ namespace Eshop.Tests
             DbContextHelper dbTestContext = new DbContextHelper();
             dbTestContext.AddOrder(orderId);
 
+            _serviceProvider
+                .Setup(x => x.GetService(typeof(EshopContext)))
+                .Returns(dbTestContext.EshopContext);
+
+
             PaymentQueue paymentQueue = new();
             paymentQueue.Enqueue(new PaymentInfo(orderId, true));
             ManualResetEvent dbEvent = new(false);
@@ -32,7 +56,7 @@ namespace Eshop.Tests
             int countOfPayment = 1;
             dbTestContext.EshopContext.SavedChanges += (sender, e) => _dbContext_SavedChanges(sender, e, dbEvent, ref countOfPayment);
 
-            var paymentService = new PaymentService(paymentQueue, dbTestContext.EshopContext);
+            var paymentService = new PaymentService(paymentQueue, _serviceProvider.Object);
 
             // act
             await paymentService.StartAsync(CancellationToken.None);
@@ -51,6 +75,10 @@ namespace Eshop.Tests
             DbContextHelper dbTestContext = new DbContextHelper();
             dbTestContext.AddOrder(orderId1);
             dbTestContext.AddOrder(orderId2);
+            _serviceProvider
+                .Setup(x => x.GetService(typeof(EshopContext)))
+                .Returns(dbTestContext.EshopContext);
+
 
             PaymentQueue paymentQueue = new();
             paymentQueue.Enqueue(new PaymentInfo(orderId1, true));
@@ -60,7 +88,7 @@ namespace Eshop.Tests
             ManualResetEvent dbEvent = new(false);
             dbTestContext.EshopContext.SavedChanges += (sender, e) => _dbContext_SavedChanges(sender, e, dbEvent, ref countOfPayment);
 
-            var paymentService = new PaymentService(paymentQueue, dbTestContext.EshopContext);
+            var paymentService = new PaymentService(paymentQueue, _serviceProvider.Object);
 
             // act
             await paymentService.StartAsync(CancellationToken.None);
@@ -82,7 +110,9 @@ namespace Eshop.Tests
             DbContextHelper dbTestContext = new DbContextHelper();
             dbTestContext.AddOrder(orderId1);
             dbTestContext.AddOrder(orderId2);
-
+            _serviceProvider
+                .Setup(x => x.GetService(typeof(EshopContext)))
+                .Returns(dbTestContext.EshopContext);
 
             PaymentQueue paymentQueue = new();
             paymentQueue.Enqueue(new PaymentInfo(orderId1, true));
@@ -93,7 +123,7 @@ namespace Eshop.Tests
             ManualResetEvent dbEvent = new(false);
             dbTestContext.EshopContext.SavedChanges += (sender, e) => _dbContext_SavedChanges(sender, e, dbEvent, ref countOfPayment);
 
-            var paymentService = new PaymentService(paymentQueue, dbTestContext.EshopContext);
+            var paymentService = new PaymentService(paymentQueue, _serviceProvider.Object);
 
             // act
             await paymentService.StartAsync(CancellationToken.None);
@@ -112,6 +142,9 @@ namespace Eshop.Tests
             DbContextHelper dbTestContext = new DbContextHelper();
             dbTestContext.AddOrder(orderId1);
             dbTestContext.AddOrder(orderId2);
+            _serviceProvider
+                .Setup(x => x.GetService(typeof(EshopContext)))
+                .Returns(dbTestContext.EshopContext);
 
             PaymentQueue paymentQueue = new();
             paymentQueue.Enqueue(new PaymentInfo(orderId1, true));
@@ -120,7 +153,7 @@ namespace Eshop.Tests
             ManualResetEvent dbEvent = new(false);
             dbTestContext.EshopContext.SavedChanges += (sender, e) => _dbContext_SavedChanges(sender, e, dbEvent, ref countOfPayment);
 
-            var paymentService = new PaymentService(paymentQueue, dbTestContext.EshopContext);
+            var paymentService = new PaymentService(paymentQueue, _serviceProvider.Object);
 
             // act
             await paymentService.StartAsync(CancellationToken.None);
@@ -140,7 +173,7 @@ namespace Eshop.Tests
             Validator.ValidateOrder(dbTestContext.EshopContext, orderId2, OrderState.Rejected);
         }
 
-
+        
         private void _dbContext_SavedChanges(object? sender, SavedChangesEventArgs e, ManualResetEvent dbEvent, ref int count)
         {
             count--;
