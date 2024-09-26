@@ -17,5 +17,13 @@ namespace Eshop.Data
             }
             return s;
         }
+
+    }
+    public static class ConsoleLoggerFactory
+    {
+        public static ILoggerFactory Create()
+        {
+            return LoggerFactory.Create(builder => { builder.AddConsole(); });
+        }
     }
 }

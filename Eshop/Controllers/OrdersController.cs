@@ -2,6 +2,7 @@
 using Eshop.Data;
 using Eshop.DataBase;
 using Eshop.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -23,6 +24,7 @@ namespace Eshop.Controllers
         // GET: api/Orders
         [HttpGet]
         [ProducesResponseType(200, Type = typeof(IEnumerable<ResponseOrder>))]
+        [Authorize]
         public async Task<ActionResult<IEnumerable<ResponseOrder>>> GetOrderAsync([FromQuery] QueryObject queryObject)
         {
             //return await _context.Order
@@ -110,6 +112,7 @@ namespace Eshop.Controllers
                     }
                 }
             }
+            var entries = _context.ChangeTracker.Entries(); //  Kiril for show context traking
             await _context.SaveChangesAsync().ConfigureAwait(false);
 
 

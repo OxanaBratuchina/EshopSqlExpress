@@ -4,11 +4,13 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Eshop.Models;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
 
 namespace Eshop.DataBase
 {
 
-     public class EshopContext : DbContext
+     public class EshopContext : IdentityDbContext<AppUser>
      {
         public EshopContext (DbContextOptions<EshopContext> options)
             : base(options)
@@ -54,9 +56,13 @@ namespace Eshop.DataBase
                     {
                         j.HasKey(k => new { k.ProductId, k.OrderId });
                     });
+            List<IdentityRole> roles = new List<IdentityRole>()
+            {
+                new IdentityRole(){ Name = "Admin", NormalizedName = "ADMIN"},
+                new IdentityRole(){ Name = "User", NormalizedName = "USER"},
+            };
 
-
-
+            modelBuilder.Entity<IdentityRole>().HasData(roles);
         }
 
 

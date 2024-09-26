@@ -19,7 +19,7 @@ namespace Eshop.Tests
         public PaymentServiceTests() 
         {
 
-
+            //https://stackoverflow.com/questions/44336489/moq-iserviceprovider-iservicescope
             var serviceScope = new Mock<IServiceScope>();
             serviceScope.Setup(x => x.ServiceProvider).Returns(_serviceProvider.Object);
 
@@ -31,7 +31,6 @@ namespace Eshop.Tests
             _serviceProvider
                 .Setup(x => x.GetService(typeof(IServiceScopeFactory)))
                 .Returns(serviceScopeFactory.Object);
-
         }
 
 

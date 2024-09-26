@@ -4,6 +4,7 @@ using Eshop.DataBase;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Eshop.Migrations
 {
     [DbContext(typeof(EshopContext))]
-    partial class EshopContextModelSnapshot : ModelSnapshot
+    [Migration("20240919095824_User")]
+    partial class User
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -155,72 +158,72 @@ namespace Eshop.Migrations
                         new
                         {
                             Id = 1,
-                            Count = 33.5,
+                            Count = 96.5,
                             Name = "Product1",
-                            Price = 209.99000000000001
+                            Price = 8666.9899999999998
                         },
                         new
                         {
                             Id = 2,
-                            Count = 79.0,
+                            Count = 32.0,
                             Name = "Product2",
-                            Price = 5272.9899999999998
+                            Price = 3861.9899999999998
                         },
                         new
                         {
                             Id = 3,
-                            Count = 64.5,
+                            Count = 24.5,
                             Name = "Product3",
-                            Price = 8241.9899999999998
+                            Price = 7797.9899999999998
                         },
                         new
                         {
                             Id = 4,
-                            Count = 23.0,
+                            Count = 89.0,
                             Name = "Product4",
-                            Price = 4098.9899999999998
+                            Price = 2488.9899999999998
                         },
                         new
                         {
                             Id = 5,
-                            Count = 14.5,
+                            Count = 36.5,
                             Name = "Product5",
-                            Price = 8319.9899999999998
+                            Price = 9080.9899999999998
                         },
                         new
                         {
                             Id = 6,
-                            Count = 9.0,
+                            Count = 84.0,
                             Name = "Product6",
-                            Price = 7421.9899999999998
+                            Price = 1502.99
                         },
                         new
                         {
                             Id = 7,
-                            Count = 28.5,
+                            Count = 7.5,
                             Name = "Product7",
-                            Price = 3312.9899999999998
+                            Price = 8989.9899999999998
                         },
                         new
                         {
                             Id = 8,
-                            Count = 80.0,
+                            Count = 72.0,
                             Name = "Product8",
-                            Price = 2343.9899999999998
+                            Price = 5308.9899999999998
                         },
                         new
                         {
                             Id = 9,
-                            Count = 50.5,
+                            Count = 33.5,
                             Name = "Product9",
-                            Price = 6068.9899999999998
+                            Price = 1731.99
                         },
                         new
                         {
                             Id = 10,
-                            Count = 81.0,
+                            Count = 77.0,
                             Name = "Product10",
-                            Price = 8871.9899999999998
+                            Price = 1415.99
                         });
                 });
 
@@ -249,20 +252,6 @@ namespace Eshop.Migrations
                         .HasFilter("[NormalizedName] IS NOT NULL");
 
                     b.ToTable("AspNetRoles", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            Id = "7d38d10b-d688-4dc5-8d2f-94938c8f801a",
-                            Name = "Admin",
-                            NormalizedName = "ADMIN"
-                        },
-                        new
-                        {
-                            Id = "d4722703-b8b7-4873-9c56-e975d0b16242",
-                            Name = "User",
-                            NormalizedName = "USER"
-                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
