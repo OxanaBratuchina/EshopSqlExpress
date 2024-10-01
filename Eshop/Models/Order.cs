@@ -1,4 +1,6 @@
-﻿namespace Eshop.Models
+﻿using Microsoft.AspNetCore.Identity;
+
+namespace Eshop.Models
 {
     public class Order
     {
@@ -13,6 +15,7 @@
 
         public List<OrderProduct> OrderProducts { get; set; } = new();
     }
+
 
 
 
