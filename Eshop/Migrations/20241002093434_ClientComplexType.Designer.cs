@@ -5,6 +5,7 @@ using Eshop.DataBase;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -12,9 +13,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Eshop.Migrations
 {
     [DbContext(typeof(EshopContext))]
-    partial class EshopContextModelSnapshot : ModelSnapshot
+    [Migration("20241002093434_ClientComplexType")]
+    partial class ClientComplexType
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -96,13 +99,13 @@ namespace Eshop.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<DateTime>("CreatedAt")
+                    b.Property<DateTime>("DateOfCreation")
                         .HasColumnType("datetime2")
-                        .HasColumnName("created_at");
+                        .HasColumnName("DateOfCreation");
 
                     b.Property<int>("State")
                         .HasColumnType("int")
-                        .HasColumnName("state");
+                        .HasColumnName("State");
 
                     b.ComplexProperty<Dictionary<string, object>>("Client", "Eshop.Models.Order.Client#Client", b1 =>
                         {
@@ -111,7 +114,7 @@ namespace Eshop.Migrations
                             b1.Property<string>("Name")
                                 .IsRequired()
                                 .HasColumnType("nvarchar(max)")
-                                .HasColumnName("client_name");
+                                .HasColumnName("ClientName");
 
                             b1.ComplexProperty<Dictionary<string, object>>("Email", "Eshop.Models.Order.Client#Client.Email#Email", b2 =>
                                 {
@@ -120,7 +123,7 @@ namespace Eshop.Migrations
                                     b2.Property<string>("Value")
                                         .IsRequired()
                                         .HasColumnType("nvarchar(max)")
-                                        .HasColumnName("client_email");
+                                        .HasColumnName("ClientEmail");
                                 });
 
                             b1.ComplexProperty<Dictionary<string, object>>("Phone", "Eshop.Models.Order.Client#Client.Phone#Phone", b2 =>
@@ -130,7 +133,7 @@ namespace Eshop.Migrations
                                     b2.Property<string>("Value")
                                         .IsRequired()
                                         .HasColumnType("nvarchar(max)")
-                                        .HasColumnName("client_phone");
+                                        .HasColumnName("ClientPhone");
                                 });
                         });
 
@@ -185,72 +188,72 @@ namespace Eshop.Migrations
                         new
                         {
                             Id = 1,
-                            Count = 89.5,
+                            Count = 11.5,
                             Name = "Product1",
-                            Price = 3243.9899999999998
+                            Price = 7969.9899999999998
                         },
                         new
                         {
                             Id = 2,
-                            Count = 87.0,
+                            Count = 70.0,
                             Name = "Product2",
-                            Price = 1926.99
+                            Price = 6188.9899999999998
                         },
                         new
                         {
                             Id = 3,
-                            Count = 76.5,
+                            Count = 84.5,
                             Name = "Product3",
-                            Price = 3581.9899999999998
+                            Price = 3044.9899999999998
                         },
                         new
                         {
                             Id = 4,
-                            Count = 52.0,
+                            Count = 28.0,
                             Name = "Product4",
-                            Price = 1011.99
+                            Price = 8560.9899999999998
                         },
                         new
                         {
                             Id = 5,
-                            Count = 31.5,
+                            Count = 77.5,
                             Name = "Product5",
-                            Price = 4243.9899999999998
+                            Price = 9485.9899999999998
                         },
                         new
                         {
                             Id = 6,
-                            Count = 28.0,
+                            Count = 36.0,
                             Name = "Product6",
-                            Price = 4878.9899999999998
+                            Price = 8205.9899999999998
                         },
                         new
                         {
                             Id = 7,
-                            Count = 102.5,
+                            Count = 43.5,
                             Name = "Product7",
-                            Price = 5297.9899999999998
+                            Price = 7304.9899999999998
                         },
                         new
                         {
                             Id = 8,
-                            Count = 86.0,
+                            Count = 28.0,
                             Name = "Product8",
-                            Price = 7756.9899999999998
+                            Price = 3609.9899999999998
                         },
                         new
                         {
                             Id = 9,
-                            Count = 47.5,
+                            Count = 57.5,
                             Name = "Product9",
-                            Price = 4310.9899999999998
+                            Price = 117.98999999999999
                         },
                         new
                         {
                             Id = 10,
-                            Count = 53.0,
+                            Count = 90.0,
                             Name = "Product10",
-                            Price = 533.99000000000001
+                            Price = 3137.9899999999998
                         });
                 });
 
@@ -283,13 +286,13 @@ namespace Eshop.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "bdc9adda-cba4-43d1-b579-81cb927a1754",
+                            Id = "56a6762f-4bbd-47bb-94dc-617c24c10bc0",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "d39dbffe-ac05-4953-b049-b97f556e60fe",
+                            Id = "27a51c7b-afb6-44fb-936e-782a3c05802f",
                             Name = "User",
                             NormalizedName = "USER"
                         });

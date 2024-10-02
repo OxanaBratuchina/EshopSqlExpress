@@ -28,9 +28,13 @@ namespace Eshop.Tests
             // arrange
             PaymentQueue paymentQueue = new();
             var ordersController = new OrdersController(dbContext, paymentQueue);
+            int clientTestId = 1;
+            var client = TestClient.CreateTestClient(clientTestId);
             var requestOrder = new RequestOrder()
             {
-                ClientName = "Client1",
+                ClientName = client.Name,
+                ClientEmail = client.Email.Value,
+                ClientPhone = client.Phone.Value,
                 Products = new List<RequestProduct>() { new RequestProduct() { Name = "Product1", Count = 15, Price = 10} }
             };
 
@@ -54,6 +58,7 @@ namespace Eshop.Tests
             var resultOrder = (ResponseOrder)ob.Value;
             resultOrder.Should().NotBeNull();
             Validator.ValidateOrder(dbContext, resultOrder.Id, OrderState.New);
+           
         }
 
         [Fact]
@@ -63,10 +68,13 @@ namespace Eshop.Tests
             EshopContext dbContext = new DbContextHelper().EshopContext;
             PaymentQueue paymentQueue = new();
             var ordersController = new OrdersController(dbContext, paymentQueue);
-            string clientName = "Client2";
+            int clientTestId = 2;
+            var client = TestClient.CreateTestClient(clientTestId);
             var requestOrder = new RequestOrder()
             {
-                ClientName = clientName,
+                ClientName = client.Name,
+                ClientEmail = client.Email.Value,
+                ClientPhone = client.Phone.Value,
                 Products = new List<RequestProduct>() { new RequestProduct() { Name = "Product100", Count = 15, Price = 10 } }
             };
 
@@ -89,7 +97,7 @@ namespace Eshop.Tests
 
             var problemDetails = (ProblemDetails)ob.Value;
             problemDetails.Should().NotBeNull();
-            Validator.NotExistOrderWithClientName(dbContext, clientName);
+            //Validator.NotExistOrderWithClientName(dbContext, client.Name);
             dbContext.Order.Count().Should().Be(0);
         }
     }

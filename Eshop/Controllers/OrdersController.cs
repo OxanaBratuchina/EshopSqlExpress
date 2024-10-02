@@ -34,7 +34,7 @@ namespace Eshop.Controllers
             //    dbo => new ResponseOrder()
             //    {
             //        ClientName = dbo.ClientName,
-            //        DateOfCreation = dbo.DateOfCreation,
+            //        CreatedAt = dbo.CreatedAt,
             //        State = dbo.State,
             //        Id = dbo.Id,
             //        Products = dbo.OrderProducts.Select(op => new RequestProduct(op.Product, op.Count, op.Price)).ToList()
@@ -48,8 +48,8 @@ namespace Eshop.Controllers
                 .Select(
                 dbo => new ResponseOrder()
                 {
-                    ClientName = dbo.ClientName,
-                    DateOfCreation = dbo.DateOfCreation,
+                    ClientName = dbo.Client.Name,
+                    DateOfCreation = dbo.CreatedAt,
                     State = dbo.State,
                     Id = dbo.Id,
                     Products = dbo.OrderProducts.Select(op => new RequestProduct(op)).ToList()
@@ -89,11 +89,12 @@ namespace Eshop.Controllers
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
-            var emailResult = Email.Create(order.ClientEmail);
-            if (emailResult.IsFailure)
-                return BadRequest(emailResult.Error);
+            var clientResult = Client.Create(order.ClientName, order.ClientEmail, order.ClientPhone);
+            if (clientResult.IsFailure)
+                return BadRequest(clientResult.Error);
 
-            var orderResult = Order.Create(order.ClientName, emailResult.Value, DateTime.Now, OrderState.New);
+
+            var orderResult = Order.Create(clientResult.Value, DateTime.Now, OrderState.New);
             if (orderResult.IsFailure)
                 return BadRequest(orderResult.Error);
             _context.Order.Add(orderResult.Value);
@@ -126,8 +127,8 @@ namespace Eshop.Controllers
             //return Created((string?)null, dbOrder);
             return StatusCode(StatusCodes.Status201Created, new ResponseOrder()
                                 {
-                                    ClientName = orderResult.Value.ClientName,
-                                    DateOfCreation = orderResult.Value.DateOfCreation,
+                                    ClientName = orderResult.Value.Client.Name,
+                                    DateOfCreation = orderResult.Value.CreatedAt,
                                     State = orderResult.Value.State,
                                     Id = orderResult.Value.Id,
                                     Products = orderResult.Value.OrderProducts.Select(op => new RequestProduct(op.Product, op.Count, op.Price)).ToList()

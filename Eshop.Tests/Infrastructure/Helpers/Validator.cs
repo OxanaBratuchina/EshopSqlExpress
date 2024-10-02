@@ -13,19 +13,24 @@ namespace Eshop.Tests.Infrastructure.Helpers
     {
         public static void ValidateOrder(EshopContext dbContext, int id, OrderState expectedState)
         {
-            var dbOrder = dbContext.Order.FirstOrDefault(o => o.Id == id);
+            var records = dbContext.Order.Count();
+            var dbOrder = dbContext.Order.Find(id);
             Assert.NotNull(dbOrder);
             Assert.Equal(expectedState, dbOrder.State);
         }
 
         public static void NotExistOrderWithClientName(EshopContext dbContext, string clientName)
         {
-            var dbOrder = dbContext.Order.FirstOrDefault(o => o.ClientName == clientName);
+            var records = dbContext.Order.Count();
+
+            var dbOrder = dbContext.Order.FirstOrDefault(o => o.Client.Name == clientName);
             Assert.Null(dbOrder);
         }
         public static void ExistOrderWithClientName(EshopContext dbContext, string clientName)
         {
-            var dbOrder = dbContext.Order.FirstOrDefault(o => o.ClientName == clientName);
+
+            var condition = dbContext.Order.Where(o => o.Client.Name == clientName).ToList();
+            var dbOrder = dbContext.Order.FirstOrDefault(o => o.Client.Name == clientName);
             Assert.NotNull(dbOrder);
         }
 

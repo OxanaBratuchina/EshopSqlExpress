@@ -52,21 +52,30 @@ namespace Eshop.DataBase
             modelBuilder.Entity<Order>()
                 .HasKey(i => i.Id);
             modelBuilder.Entity<Order>()
-              .Property(name => name.State).HasColumnName("State")
-              .IsRequired();            
-            modelBuilder.Entity<Order>()
-                  .Property(name => name.ClientName).HasColumnName("ClientName")
-                  .IsRequired()
-                  .HasMaxLength(100);            
-            modelBuilder.Entity<Order>()
-                  .ComplexProperty(name => name.ClientEmail, a =>
-                  {
-                      a.Property(n => n.Value).HasColumnName("ClientEmail");
-                      a.IsRequired();
-                  });
+              .Property(name => name.State).HasColumnName("state")
+              .IsRequired();
+            modelBuilder.Entity<Order>(
+                    b =>
+                    {
+                        b.ComplexProperty(
+                            e => e.Client,
+                            b =>
+                            {
+                                b.Property(e => e.Name).HasColumnName("client_name");
+                                b.ComplexProperty(e => e.Email, a => 
+                                                                { 
+                                                                    a.Property(p => p.Value).HasColumnName("client_email"); 
+                                                                });
+                                b.ComplexProperty(e => e.Phone, a => 
+                                                                { 
+                                                                    a.Property(p => p.Value).HasColumnName("client_phone");
+                                                                    a.IsRequired();
+                                                                });
+                            });
+                    });
 
             modelBuilder.Entity<Order>()
-                  .Property(name => name.DateOfCreation).HasColumnName("DateOfCreation")
+                  .Property(name => name.CreatedAt).HasColumnName("created_at")
                   .IsRequired();
 
             modelBuilder

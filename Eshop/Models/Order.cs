@@ -12,11 +12,9 @@ namespace Eshop.Models
         public const int NAME_MAX_LENGTH = 100;
 
         public int Id { get; }
-        public string ClientName { get; }
-        public Email ClientEmail { get; }
- //       public Phone? Phone { get; }
+        public Client Client{ get; }
 
-        public DateTime DateOfCreation { get; }
+        public DateTime CreatedAt { get; }
 
         public OrderState State { get; private set; }
 
@@ -27,23 +25,19 @@ namespace Eshop.Models
         public List<OrderProduct> OrderProducts { get; set; } = new();
         private Order() { }
 
-        private Order(string clientName, Email clientEmail, DateTime createdAt, OrderState orderState, int? id = null) 
+        private Order(Client client, DateTime createdAt, OrderState orderState, int? id = null) 
         { 
-            ClientName = clientName;
-            ClientEmail = clientEmail;
-            DateOfCreation = createdAt;         
+            Client = client;
+            CreatedAt = createdAt;         
             State = orderState;
             if (id.HasValue) Id = id.Value;
         }
-        public static Result<Order> Create(string clientName, Email clientEmail, DateTime createdAt, OrderState orderState, int? id = null)
+        public static Result<Order> Create(Client client, DateTime createdAt, OrderState orderState, int? id = null)
         {
-            if (string.IsNullOrEmpty(clientName) || clientName.Length > NAME_MAX_LENGTH)
-                return Result.Failure<Order>($"{nameof(clientName)} is empty or too long");
+            if (client == null)
+                return Result.Failure<Order>($"{nameof(client)} can not be null");
 
-            if (clientEmail == null)
-                return Result.Failure<Order>($"{nameof(clientEmail)} can not be null");
-
-            return Result.Success<Order>(new Order(clientName, clientEmail, createdAt, orderState, id));
+            return Result.Success<Order>(new Order(client, createdAt, orderState, id));
 
         }
 
@@ -103,8 +97,9 @@ namespace Eshop.Models
         {
             if (string.IsNullOrEmpty(phone))
                 return Result.Failure<Phone>($"{nameof(phone)} is null");
+            var notSpacedPhone = phone.Trim();
 
-            Regex regexCzNumber = new Regex(@"^(?:\+420)?\d{ 3}\s ?\d{ 3}\s ?\d{ 3}$");
+            Regex regexCzNumber = new Regex(@"^(?:\+420)? ?[0-9]{3} ?[0-9]{3} ?[0-9]{3}$");
 
             if (regexCzNumber.Match(phone).Success)
                 return Result.Success<Phone>(new Phone(phone));

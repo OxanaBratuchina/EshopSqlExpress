@@ -47,7 +47,7 @@ namespace Eshop.Services
             using (var scope = _serviceProvider.CreateScope())
             {
                 var dbContext = scope.ServiceProvider.GetRequiredService<EshopContext>();
-                var order = dbContext.Order.FirstOrDefault(order => order.Id == paymentInfo.OrderId);
+                var order = dbContext.Order.Find(paymentInfo.OrderId);
                 if (order == null)
                 {
                     throw new OrderNotFoundException(paymentInfo.OrderId);
