@@ -89,8 +89,14 @@ namespace Eshop.Controllers
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
-            var dbOrder = new Order() { ClientName = order.ClientName, DateOfCreation = DateTime.Now, State = OrderState.New };
-            _context.Order.Add(dbOrder);
+            var emailResult = Email.Create(order.ClientEmail);
+            if (emailResult.IsFailure)
+                return BadRequest(emailResult.Error);
+
+            var orderResult = Order.Create(order.ClientName, emailResult.Value, DateTime.Now, OrderState.New);
+            if (orderResult.IsFailure)
+                return BadRequest(orderResult.Error);
+            _context.Order.Add(orderResult.Value);
 
             if (order.Products != null && order.Products.Count > 0)
             {
@@ -109,7 +115,7 @@ namespace Eshop.Controllers
                             Console.WriteLine($"Product with id={dbProduct.Id}, name={product.Name} does not have enough resorces");
                             return StatusCode(StatusCodes.Status400BadRequest, new ProblemDetails { Detail = $"Product with id={dbProduct.Id}, name={product.Name} does not have enough resorces" });
                         }
-                        dbProduct.OrderProducts.Add(new OrderProduct() { Order = dbOrder, Count = product.Count, Price = product.Price });
+                        dbProduct.OrderProducts.Add(new OrderProduct() { Order = orderResult.Value, Count = product.Count, Price = product.Price });
                     }
                 }
             }
@@ -120,11 +126,11 @@ namespace Eshop.Controllers
             //return Created((string?)null, dbOrder);
             return StatusCode(StatusCodes.Status201Created, new ResponseOrder()
                                 {
-                                    ClientName = dbOrder.ClientName,
-                                    DateOfCreation = dbOrder.DateOfCreation,
-                                    State = dbOrder.State,
-                                    Id = dbOrder.Id,
-                                    Products = dbOrder.OrderProducts.Select(op => new RequestProduct(op.Product, op.Count, op.Price)).ToList()
+                                    ClientName = orderResult.Value.ClientName,
+                                    DateOfCreation = orderResult.Value.DateOfCreation,
+                                    State = orderResult.Value.State,
+                                    Id = orderResult.Value.Id,
+                                    Products = orderResult.Value.OrderProducts.Select(op => new RequestProduct(op.Product, op.Count, op.Price)).ToList()
                                 });
         }
     }

@@ -53,7 +53,12 @@ namespace Eshop.Services
                     throw new OrderNotFoundException(paymentInfo.OrderId);
                 }
 
-                order.State = paymentInfo.Payed ? OrderState.Payd : OrderState.Rejected;
+                var changeResult = order.ChangeState(paymentInfo.Payed ? OrderState.Payd : OrderState.Rejected);
+                if (changeResult.IsFailure)
+                {
+                    Console.WriteLine($"[{order.Id}] {changeResult.Error}");
+                    return;
+                }
 
                 await dbContext.SaveChangesAsync().ConfigureAwait(false);
 

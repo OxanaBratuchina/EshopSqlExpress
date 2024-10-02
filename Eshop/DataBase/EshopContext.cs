@@ -38,6 +38,37 @@ namespace Eshop.DataBase
                                                                                 Price = 0.99 + Random.Shared.Next(1, 10000),
                                                                                 Count = 0.5 * i + Random.Shared.Next(0, 100)
                                                                             }));
+            /*  modelBuilder.Entity<Client>()
+                  .HasNoKey()
+                  .ComplexProperty(name => name.Email, a =>
+              {
+                  a.Property(n => n.Value).HasColumnName("ClientEmail");
+              });
+              modelBuilder.Entity<Client>().ComplexProperty(name => name.Phone, a =>
+              {
+                  a.IsRequired();
+                  a.Property(n => n.Value).HasColumnName("ClientPhone");
+              });*/
+            modelBuilder.Entity<Order>()
+                .HasKey(i => i.Id);
+            modelBuilder.Entity<Order>()
+              .Property(name => name.State).HasColumnName("State")
+              .IsRequired();            
+            modelBuilder.Entity<Order>()
+                  .Property(name => name.ClientName).HasColumnName("ClientName")
+                  .IsRequired()
+                  .HasMaxLength(100);            
+            modelBuilder.Entity<Order>()
+                  .ComplexProperty(name => name.ClientEmail, a =>
+                  {
+                      a.Property(n => n.Value).HasColumnName("ClientEmail");
+                      a.IsRequired();
+                  });
+
+            modelBuilder.Entity<Order>()
+                  .Property(name => name.DateOfCreation).HasColumnName("DateOfCreation")
+                  .IsRequired();
+
             modelBuilder
                 .Entity<Order>()
                 .HasMany(o => o.Products)
