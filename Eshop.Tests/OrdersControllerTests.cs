@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http;
 using Eshop.Contracts;
 using Eshop.Tests.Infrastructure.Helpers;
+using Microsoft.EntityFrameworkCore;
 
 
 namespace Eshop.Tests
@@ -58,7 +59,6 @@ namespace Eshop.Tests
             var resultOrder = (ResponseOrder)ob.Value;
             resultOrder.Should().NotBeNull();
             Validator.ValidateOrder(dbContext, resultOrder.Id, OrderState.New);
-           
         }
 
         [Fact]

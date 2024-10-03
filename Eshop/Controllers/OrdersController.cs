@@ -41,6 +41,8 @@ namespace Eshop.Controllers
             //    }
 
             //    ).ToListAsync().ConfigureAwait(false);
+
+
             var respOrders = _context.Order
                 .AsNoTracking()
                 .Include(o => o.OrderProducts)
@@ -64,7 +66,9 @@ namespace Eshop.Controllers
                     respOrders = respOrders.Where(o => o.State == queryObject.OrderState);
                 }
                 if (!string.IsNullOrWhiteSpace(queryObject.Client))
+                {
                     respOrders = respOrders.Where(o => !string.IsNullOrEmpty(o.ClientName) && o.ClientName.Contains(queryObject.Client));
+                }
             }
             return await respOrders.ToListAsync().ConfigureAwait(false);
         }

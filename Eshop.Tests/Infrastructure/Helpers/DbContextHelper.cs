@@ -35,7 +35,9 @@ namespace Eshop.Tests.Infrastructure.Helpers
 
         public void AddOrder(int id)
         {
-            var dbOrder = Order.Create(Client.Create("Client1", "client1@seznam.cz","+420776452201").Value, DateTime.Now, OrderState.New, id ).Value;
+            int clientTestId = 1;
+            var client = TestClient.CreateTestClient(clientTestId);
+            var dbOrder = Order.Create(client, DateTime.Now, OrderState.New, id ).Value;
             EshopContext.Order.Add(dbOrder);
             var dbProduct = EshopContext.Product.FirstOrDefault(x => x.Name == "Product1");
             dbProduct.OrderProducts.Add(new OrderProduct() { Order = dbOrder, Count = 1, Price = 6 });

@@ -1,5 +1,8 @@
-﻿using Eshop.DataBase;
+﻿using Eshop.Contracts;
+using Eshop.Data;
+using Eshop.DataBase;
 using Eshop.Models;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -29,9 +32,9 @@ namespace Eshop.Tests.Infrastructure.Helpers
         public static void ExistOrderWithClientName(EshopContext dbContext, string clientName)
         {
 
-            var condition = dbContext.Order.Where(o => o.Client.Name == clientName).ToList();
-            var dbOrder = dbContext.Order.FirstOrDefault(o => o.Client.Name == clientName);
-            Assert.NotNull(dbOrder);
+                var condition = dbContext.Order.Where(o => o.Client.Name == clientName).ToList();
+                var dbOrder = dbContext.Order.FirstOrDefault(o => o.Client.Name == clientName);
+                Assert.NotNull(dbOrder);
         }
 
     }
