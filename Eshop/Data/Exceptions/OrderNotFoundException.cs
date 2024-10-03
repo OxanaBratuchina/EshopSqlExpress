@@ -1,4 +1,4 @@
-﻿namespace Eshop.Data
+﻿namespace Eshop.Data.Exceptions
 {
     public class OrderNotFoundException : Exception
     {

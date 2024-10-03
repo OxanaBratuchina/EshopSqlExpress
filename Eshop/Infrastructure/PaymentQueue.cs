@@ -1,6 +1,8 @@
-﻿using Microsoft.VisualStudio.Threading;
+﻿using Eshop.Data;
+using Eshop.Data.Interfaces;
+using Microsoft.VisualStudio.Threading;
 
-namespace Eshop.Data
+namespace Eshop.Infrastructure
 {
     public class PaymentQueue : IPaymentQueue
     {

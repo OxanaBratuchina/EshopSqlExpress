@@ -1,4 +1,4 @@
-﻿namespace Eshop.Data
+﻿namespace Eshop.Data.Interfaces
 {
     public interface IPaymentQueue
     {

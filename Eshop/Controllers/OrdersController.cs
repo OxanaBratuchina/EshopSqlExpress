@@ -1,6 +1,7 @@
 ﻿using Eshop.Contracts;
 using Eshop.Data;
-using Eshop.DataBase;
+using Eshop.Data.Interfaces;
+using Eshop.Infrastructure;
 using Eshop.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -28,21 +29,6 @@ namespace Eshop.Controllers
         [Authorize]
         public async Task<ActionResult<IEnumerable<ResponseOrder>>> GetOrderAsync([FromQuery] QueryObject queryObject)
         {
-            //return await _context.Order
-            //    .AsNoTracking()
-            //    .Select(
-            //    dbo => new ResponseOrder()
-            //    {
-            //        ClientName = dbo.ClientName,
-            //        CreatedAt = dbo.CreatedAt,
-            //        State = dbo.State,
-            //        Id = dbo.Id,
-            //        Products = dbo.OrderProducts.Select(op => new RequestProduct(op.Product, op.Count, op.Price)).ToList()
-            //    }
-
-            //    ).ToListAsync().ConfigureAwait(false);
-
-
             var respOrders = _context.Order
                 .AsNoTracking()
                 .Include(o => o.OrderProducts)

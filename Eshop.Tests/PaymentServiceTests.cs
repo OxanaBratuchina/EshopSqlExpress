@@ -1,5 +1,5 @@
 using Eshop.Data;
-using Eshop.DataBase;
+using Eshop.Infrastructure;
 using Eshop.Models;
 using Eshop.Services;
 using Eshop.Tests.Infrastructure.Helpers;

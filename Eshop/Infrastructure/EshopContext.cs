@@ -7,7 +7,7 @@ using Eshop.Models;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 
-namespace Eshop.DataBase
+namespace Eshop.Infrastructure
 {
 
      public class EshopContext : IdentityDbContext<AppUser>

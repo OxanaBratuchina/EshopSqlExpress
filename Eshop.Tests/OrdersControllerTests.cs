@@ -1,6 +1,4 @@
 ﻿using Eshop.Controllers;
-using Eshop.Data;
-using Eshop.DataBase;
 using Eshop.Models;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
@@ -8,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Eshop.Contracts;
 using Eshop.Tests.Infrastructure.Helpers;
 using Microsoft.EntityFrameworkCore;
+using Eshop.Infrastructure;
 
 
 namespace Eshop.Tests

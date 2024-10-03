@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Eshop.DataBase;
+using Eshop.Infrastructure;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Eshop.Models;
 

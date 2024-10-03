@@ -1,12 +1,12 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Eshop.DataBase;
+using Eshop.Infrastructure;
 using Eshop.Services;
-using Eshop.Data;
 using Eshop.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Eshop.Data.Interfaces;
 
 namespace Eshop
 {
