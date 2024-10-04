@@ -1,5 +1,5 @@
 This project has been created as ASP Net Web API Core.
-It uses EntityFrameworkCore for working with SQLExpress.
+It uses EntityFrameworkCore 8 for working with SQLExpress.
 DataBase EshopDb has 3 tables, Product, Order and OrderProduct (for connection ManyToMany). Table Product is filled on start of controller working.
 OrdersController has 3 methods:
 -Get - for getting of all orders
