@@ -7,3 +7,6 @@ OrdersController has 3 methods:
 -post {id}/payment for payment accepting (put payment info to special asynch queue)
 
 Service PaymentService takes PaymentInfo from queue and updates payment info to order tables (payed attribute)
+
+Added authorizarion oauth2 (JWT token using)
+
